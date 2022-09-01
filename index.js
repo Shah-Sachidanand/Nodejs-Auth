@@ -12,6 +12,7 @@ app.set('view engine', 'ejs');
 
 
 app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
 
 app.listen(PORT, console.log(`Server Running On PORT ${PORT}`));
 

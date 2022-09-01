@@ -386,7 +386,10 @@ exports.loginHandle = (req, res, next) => {
 
 //------------ Logout Handle ------------//
 exports.logoutHandle = (req, res) => {
-    req.logout();
-    req.flash('success_msg', 'You are logged out');
-    res.redirect('/auth/login');
+    req.logout(()=>{
+        res.redirect('/auth/login');
+        req.flash('success_msg', 'You are logged out');
+    });
+   
+    
 }

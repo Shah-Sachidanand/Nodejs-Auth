@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
+const customFlash = require('./config/flash');
 
 const app = express();
 
@@ -49,6 +50,9 @@ app.use(function(req, res, next) {
   res.locals.error = req.flash('error');
   next();
 });
+// For Notifications -
+app.use(flash());
+app.use(customFlash.setFlash);
 //------------ Routes ------------//
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));

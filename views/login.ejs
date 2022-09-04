@@ -11,21 +11,23 @@
             <form action="/auth/login" method="POST">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" />
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email Address" />
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" class="form-control"
                         placeholder="Enter Password" />
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" style="background-color:#1877f2;" class="btn btn-primary btn-block">Login</button>
             </form>
-            <p class="mt-4">
-                New User? <a href="/auth/register">Register</a>
+            <button type="submit" class="btn btn-primary btn-block mt-3" style="background-color: #42b72a;">
+                <a style="color:#FFFFFF; text-decoration: none;" href="/auth/register">Create New Account</a>
+            </button>
+            <p class="mt-3">
+                <a href="/auth/forgot">Forgotten password?</a>
             </p>
-            <p>
-                Forgot Password? <a href="/auth/forgot">Forget</a>
-            </p>
+         
+           
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@ router.get('/forgot', (req, res) => res.render('forgot'));
 
 //------------ Reset Password Route ------------//
 router.get('/reset', (req, res) => {
-    console.log(id);
+    // console.log(id);
     res.render('reset', { id: req.params.id })
     
 });

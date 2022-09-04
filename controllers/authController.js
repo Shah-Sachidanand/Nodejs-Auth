@@ -17,17 +17,17 @@ exports.registerHandle = (req, res) => {
 
     //------------ Checking required fields ------------//
     if (!name || !email || !password || !password2) {
-        errors.push({ msg: 'Please enter all fields' });
+        req.flash('error','Please enter all fields');
     }
 
     //------------ Checking password mismatch ------------//
     if (password != password2) {
-        errors.push({ msg: 'Passwords do not match' });
+        req.flash('error', 'Passwords do not match');
     }
 
     //------------ Checking password length ------------//
     if (password.length < 8) {
-        errors.push({ msg: 'Password must be at least 8 characters' });
+        req.flash('error', 'Password must be at least 8 characters');
     }
 
     if (errors.length > 0) {
@@ -43,7 +43,7 @@ exports.registerHandle = (req, res) => {
         User.findOne({ email: email }).then(user => {
             if (user) {
                 //------------ User already exists ------------//
-                errors.push({ msg: 'Email ID already registered' });
+                req.flash('error', 'Email ID already registered');
                 res.render('register', {
                     errors,
                     name,
@@ -98,7 +98,7 @@ exports.registerHandle = (req, res) => {
                     if (error) {
                         console.log(error);
                         req.flash(
-                            'error_msg',
+                            'error',
                             'Something went wrong on our end. Please register again.'
                         );
                         res.redirect('/auth/login');
@@ -106,7 +106,7 @@ exports.registerHandle = (req, res) => {
                     else {
                         console.log('Mail sent : %s', info.response);
                         req.flash(
-                            'success_msg',
+                            'success',
                             'Activation link sent to email ID. Please activate to log in.'
                         );
                         res.redirect('/auth/login');
@@ -126,7 +126,7 @@ exports.activateHandle = (req, res) => {
         jwt.verify(token, JWT_KEY, (err, decodedToken) => {
             if (err) {
                 req.flash(
-                    'error_msg',
+                    'error',
                     'Incorrect or expired link! Please register again.'
                 );
                 res.redirect('/auth/register');
@@ -137,7 +137,7 @@ exports.activateHandle = (req, res) => {
                     if (user) {
                         //------------ User already exists ------------//
                         req.flash(
-                            'error_msg',
+                            'error',
                             'Email ID already registered! Please log in.'
                         );
                         res.redirect('/auth/login');
@@ -156,7 +156,7 @@ exports.activateHandle = (req, res) => {
                                     .save()
                                     .then(user => {
                                         req.flash(
-                                            'success_msg',
+                                            'success',
                                             'Account activated. You can now log in.'
                                         );
                                         res.redirect('/auth/login');
@@ -183,7 +183,7 @@ exports.forgotPassword = (req, res) => {
 
     //------------ Checking required fields ------------//
     if (!email) {
-        errors.push({ msg: 'Please enter an email ID' });
+        req.flash('error', 'Please enter an email ID');
     }
 
     if (errors.length > 0) {
@@ -195,7 +195,8 @@ exports.forgotPassword = (req, res) => {
         User.findOne({ email: email }).then(user => {
             if (!user) {
                 //------------ User already exists ------------//
-                errors.push({ msg: 'User with Email ID does not exist!' });
+                req.flash('error', 'User with Email ID does not exist!');
+
                 res.render('forgot', {
                     errors,
                     email
@@ -223,7 +224,7 @@ exports.forgotPassword = (req, res) => {
 
                 User.updateOne({ resetLink: token }, (err, success) => {
                     if (err) {
-                        errors.push({ msg: 'Error resetting password!' });
+                        req.flash('error', 'Error resetting password!');
                         res.render('forgot', {
                             errors,
                             email
@@ -254,7 +255,7 @@ exports.forgotPassword = (req, res) => {
                             if (error) {
                                 console.log(error);
                                 req.flash(
-                                    'error_msg',
+                                    'error',
                                     'Something went wrong on our end. Please try again later.'
                                 );
                                 res.redirect('/auth/forgot');
@@ -262,7 +263,7 @@ exports.forgotPassword = (req, res) => {
                             else {
                                 console.log('Mail sent : %s', info.response);
                                 req.flash(
-                                    'success_msg',
+                                    'success',
                                     'Password reset link sent to email ID. Please follow the instructions.'
                                 );
                                 res.redirect('/auth/login');
@@ -284,7 +285,7 @@ exports.gotoReset = (req, res) => {
         jwt.verify(token, JWT_RESET_KEY, (err, decodedToken) => {
             if (err) {
                 req.flash(
-                    'error_msg',
+                    'error',
                     'Incorrect or expired link! Please try again.'
                 );
                 res.redirect('/auth/login');
@@ -294,7 +295,7 @@ exports.gotoReset = (req, res) => {
                 User.findById(_id, (err, user) => {
                     if (err) {
                         req.flash(
-                            'error_msg',
+                            'error',
                             'User with email ID does not exist! Please try again.'
                         );
                         res.redirect('/auth/login');
@@ -320,7 +321,7 @@ exports.resetPassword = (req, res) => {
     //------------ Checking required fields ------------//
     if (!password || !password2) {
         req.flash(
-            'error_msg',
+            'error',
             'Please enter all fields.'
         );
         res.redirect(`/auth/reset/${id}`);
@@ -329,7 +330,7 @@ exports.resetPassword = (req, res) => {
     //------------ Checking password length ------------//
     else if (password.length < 8) {
         req.flash(
-            'error_msg',
+            'error',
             'Password must be at least 8 characters.'
         );
         res.redirect(`/auth/reset/${id}`);
@@ -338,7 +339,7 @@ exports.resetPassword = (req, res) => {
     //------------ Checking password mismatch ------------//
     else if (password != password2) {
         req.flash(
-            'error_msg',
+            'error',
             'Passwords do not match.'
         );
         res.redirect(`/auth/reset/${id}`);
@@ -356,13 +357,13 @@ exports.resetPassword = (req, res) => {
                     function (err, result) {
                         if (err) {
                             req.flash(
-                                'error_msg',
+                                'error',
                                 'Error resetting password!'
                             );
                             res.redirect(`/auth/reset/${id}`);
                         } else {
                             req.flash(
-                                'success_msg',
+                                'success',
                                 'Password reset successfully!'
                             );
                             res.redirect('/auth/login');
@@ -380,15 +381,17 @@ exports.loginHandle = (req, res, next) => {
     passport.authenticate('local', {
         successRedirect: '/dashboard',
         failureRedirect: '/auth/login',
-        failureFlash: true
-    })(req, res, next);
+        failureFlash: ('error', 'Please Enter Valid Email ID And Password'),
+        successFlash:('success', 'You Are Logged In')
+    })(req, res, next) 
+    
 }
 
 //------------ Logout Handle ------------//
 exports.logoutHandle = (req, res) => {
     req.logout(()=>{
         res.redirect('/auth/login');
-        req.flash('success_msg', 'You are logged out');
+        req.flash('success', 'You are logged out');
     });
    
     

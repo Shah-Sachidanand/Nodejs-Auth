@@ -316,6 +316,7 @@ exports.gotoReset = (req, res) => {
 exports.resetPassword = (req, res) => {
     var { password, password2 } = req.body;
     const id = req.params.id;
+    console.log(id)
     let errors = [];
 
     //------------ Checking required fields ------------//

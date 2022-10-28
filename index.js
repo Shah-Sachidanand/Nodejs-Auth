@@ -7,6 +7,7 @@ const passport = require('passport');
 const customFlash = require('./config/flash');
 
 const app = express();
+const PORT = process.env.PORT || 8000;
 
 //------------ Passport Configuration ------------//
 require('./config/passport')(passport);
@@ -48,10 +49,10 @@ app.use(customFlash.setFlash);
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 
-app.listen(process.env.PORT ||3000,function (err) {
+app.listen(PORT,function (err) {
     if(err){
         console.log(err);
     }else {
-        console.log("Server Started At Port 3000");
+        console.log(`Server Started At Port ${PORT}`);
     }
 });
